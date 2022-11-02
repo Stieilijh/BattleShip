@@ -1,15 +1,20 @@
-const MAX_LENGTH = 4;
-const MIN_LENGTH = 1;
-
 export default class Ship {
-  constructor(length) {
+  constructor(length, tileId, isVertical) {
     this.length = length;
     this.hits = 0;
+    this.tileId = tileId;
+    this.isVertical = isVertical;
   }
   hit() {
     this.hits++;
   }
-  get hasSunk() {
+  getTileId() {
+    return this.tileId;
+  }
+  getLength() {
+    return this.length;
+  }
+  hasSunk() {
     return this.length == this.hits;
   }
 }
