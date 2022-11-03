@@ -1,4 +1,5 @@
 import Gameboard from "./Gameboard";
+import ShowPlaceShipsWindow from "./PlaceShipsWindow";
 
 const GRAY = "rgb(211,211,211)";
 const cpustr = "CPU";
@@ -29,6 +30,11 @@ const setupGameboard = (gameboard, opponentGameboard, str) => {
   const heading = document.createElement("h2");
   heading.textContent = "Beat the " + str;
   headingDiv.appendChild(heading);
+  //ships remianing text
+  const textDiv = document.createElement("h5");
+  textDiv.id = str + "textDiv";
+  textDiv.textContent = "Remaining Ships : " + noOfShipsRemaining(gameboard);
+  headingDiv.appendChild(textDiv);
   //gameboard container
   const gameboardDiv = document.createElement("div");
   gameboardDiv.style.display = "grid";
@@ -48,19 +54,22 @@ const setupGameboard = (gameboard, opponentGameboard, str) => {
     box.addEventListener("click", () => {
       if (str == plstr) return;
       if (gameboard.getBoolBoard()[i]) return;
-      console.log("player");
       gameboard.receiveAttack(i);
-      repaintBoxs(gameboard, box.className);
-      checkWinner(gameboard, plstr);
+      repaintBoxs(gameboard, str);
+      if (parseInt(noOfShipsRemaining(gameboard)) == 0) {
+        alert("Player Wins!! Play Again!!");
+        ShowPlaceShipsWindow();
+      }
       let randTile = getRandomInt(0, 100);
       while (opponentGameboard.getBoolBoard()[randTile]) {
         randTile = getRandomInt(0, 100);
       }
-      console.log("cpu");
       opponentGameboard.receiveAttack(randTile);
-      const opponentStr = plstr + "tile";
-      repaintBoxs(opponentGameboard, opponentStr);
-      checkWinner(gameboard, cpustr);
+      repaintBoxs(opponentGameboard, plstr);
+      if (parseInt(noOfShipsRemaining(opponentGameboard)) == 0) {
+        alert("Cpu wins!! Play Again!!");
+        ShowPlaceShipsWindow();
+      }
     });
   }
   //containerDiv appends
@@ -71,17 +80,20 @@ const setupGameboard = (gameboard, opponentGameboard, str) => {
   const repaintBoxs = (gameboard, str) => {
     for (let i = 0; i < TOTALTILES; i++) {
       if (gameboard.getBoolBoard()[i]) {
-        document.getElementById(str + i).style.backgroundColor =
+        document.getElementById(str + "tile" + i).style.backgroundColor =
           gameboard.getBoard()[i];
       }
     }
+    //change the text
+    document.getElementById(str + "textDiv").textContent =
+      "Remaining Ships : " + noOfShipsRemaining(gameboard);
   };
 };
-const checkWinner = (gameboard) => {
-  if (!gameboard.sunkShips.length == gameboard.MAX_LENGTH) return;
-};
-function getRandomInt(min, max) {
+const getRandomInt = (min, max) => {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min) + min);
-}
+};
+const noOfShipsRemaining = (gameboard) => {
+  return gameboard.allShips.length - gameboard.sunkShips.length;
+};

@@ -74,6 +74,8 @@ export default function () {
   });
   //content wrapper container
   const contentDiv = document.getElementById("content");
+  contentDiv.innerHTML = "";
+  contentDiv.style = null;
   contentDiv.appendChild(headingDiv);
   contentDiv.appendChild(orientationOfShipsBtn);
   contentDiv.appendChild(gameboardDiv);
