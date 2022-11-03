@@ -14,6 +14,7 @@ export default class Gameboard {
     this.MAX_LENGTH = 5;
     this.isVertical = false;
     this.allShips = [];
+    this.sunkShips = [];
   }
   initiliseBoard() {
     for (let i = 0; i < this.TOTALTILES; i++) {
@@ -70,18 +71,30 @@ export default class Gameboard {
     }
     this.allShips.push(ship);
   }
+  placeShipsRandomly() {
+    let randTile = getRandomInt(0, 100);
+    let randbool = true;
+    this.isVertical = randbool;
+    while (this.allShips.length < this.MAX_LENGTH) {
+      this.isVertical = randbool;
+      const ship = new Ship(this.allShips.length + 1, randTile, randbool);
+      this.placeShip(ship);
+      randbool = !randbool;
+      randTile = getRandomInt(0, 100);
+    }
+  }
   receiveAttack(tileId) {
     if (this.getBoolBoard()[tileId]) return;
     this.tileHitList[tileId] = true;
-    const allShipsTileIds = findTheNonEmptyTiles(this.getBoard());
-    if (!allShipsTileIds.includes(tileId)) {
+    const allShipsTileIds = findTheNonEmptyTiles(this.allShips);
+    if (!allShipsTileIds.includes(parseInt(tileId))) {
       this.board[tileId] = GREEN;
       return;
     }
     const hitShip = findShip(this.allShips, tileId);
     hitShip.hit();
     if (hitShip.hasSunk()) {
-      console.log("1 Ship down ");
+      this.sunkShips.push(hitShip);
     }
   }
   isEmpty() {
@@ -91,30 +104,23 @@ export default class Gameboard {
     return true;
   }
 }
-const findTheNonEmptyTiles = (board) => {
+const findTheNonEmptyTiles = (ships) => {
   let arr = [];
-  for (let i in board) {
-    if (board[i] == RED) {
-      arr.push(parseInt(i));
-    }
+  for (let ship of ships) {
+    arr.push(...ship.getTiles());
   }
   return arr;
 };
 const findShip = (ships, tileId) => {
   for (let ship of ships) {
-    const len = ship.getLength();
-    if (ship.isVertical) {
-      for (let i = 0; i < len; i++) {
-        if (tileId == ship.getTileId() + i * SIZE) {
-          return ship;
-        }
-      }
-    } else {
-      for (let i = 0; i < len; i++) {
-        if (tileId == ship.getTileId() + i) {
-          return ship;
-        }
-      }
+    if (ship.getTiles().includes(parseInt(tileId))) {
+      return ship;
     }
   }
+  throw new Error("Ship does'nt exist but the tile is not empty");
 };
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min) + min);
+}

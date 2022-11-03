@@ -5,7 +5,7 @@
   "main": "webpack.config.js",
   "scripts": {
     "test": "jest",
-    "build": "webpack --watch --mode=production"
+    "build": "webpack --watch --mode=development"
   },
   "repository": {
     "type": "git",

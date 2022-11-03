@@ -3,8 +3,6 @@ import Ship from "./Ship";
 import MainGameScreen from "./MainGameScreen";
 
 const GRAY = "rgb(211,211,211)";
-const GREEN = "#00FF00";
-const RED = "#FF0000";
 
 export default function () {
   let isVertical = false;
@@ -33,8 +31,8 @@ export default function () {
     box.style.backgroundColor = GRAY;
     gameboardDiv.appendChild(box);
     box.addEventListener("click", () => {
-      const ship = new Ship(currentShipLength(gameboard), i, isVertical);
       if (gameboard.allShips.length == gameboard.MAX_LENGTH) return;
+      const ship = new Ship(currentShipLength(gameboard), i, isVertical);
       gameboard.placeShip(ship);
       repaintBoxs(gameboard.getBoard());
     });
