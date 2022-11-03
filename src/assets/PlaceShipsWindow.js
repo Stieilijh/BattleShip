@@ -1,11 +1,12 @@
 import Gameboard from "./Gameboard";
 import Ship from "./Ship";
+import MainGameScreen from "./MainGameScreen";
 
 const GRAY = "rgb(211,211,211)";
 const GREEN = "#00FF00";
 const RED = "#FF0000";
 
-export default function show() {
+export default function () {
   let isVertical = false;
   let gameboard = new Gameboard();
   const TOTALTILES = gameboard.getTotalTiles();
@@ -19,8 +20,8 @@ export default function show() {
   const gameboardDiv = document.createElement("div");
   gameboardDiv.style.display = "grid";
   gameboardDiv.id = "gameboardDiv";
-  gameboardDiv.style.width = "400px";
-  gameboardDiv.style.height = "400px";
+  gameboardDiv.style.width = "300px";
+  gameboardDiv.style.height = "300px";
   gameboardDiv.style.gridTemplateColumns = "repeat(10,1fr)";
   gameboardDiv.style.border = "2px solid black";
   //Tiles
@@ -68,9 +69,9 @@ export default function show() {
   submitBtn.textContent = "Submit the Ships";
   submitBtn.addEventListener("click", () => {
     if (gameboard.allShips.length == 5) {
-      console.log("Succes");
+      MainGameScreen(gameboard);
     } else {
-      console.log("Fail");
+      alert("Place all five ships!!");
     }
   });
   //content wrapper container
@@ -93,7 +94,6 @@ export default function show() {
     for (let ship of gameboard.allShips) {
       lenArr.push(ship.getLength());
     }
-    console.log(gameboard.allShips);
     for (let i = 1; i < gameboard.MAX_LENGTH + 1; i++) {
       if (!lenArr.includes(i)) return i;
     }

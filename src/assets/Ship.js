@@ -11,6 +11,9 @@ export default class Ship {
   getTileId() {
     return this.tileId;
   }
+  isVertical() {
+    return this.isVertical;
+  }
   getLength() {
     return this.length;
   }
